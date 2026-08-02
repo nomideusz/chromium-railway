@@ -1,0 +1,9 @@
+#!/bin/bash
+# Add an unauthenticated /healthcheck for Railway. init-nginx regenerates the
+# live config from /defaults/default.conf at boot and enables basic auth on
+# everything when PASSWORD is set — patch both files so init order is moot.
+for F in /defaults/default.conf /etc/nginx/sites-available/default; do
+  [[ -f "$F" ]] || continue
+  grep -q '/healthcheck' "$F" || \
+    sed -i '0,/^  location /s//  location = \/healthcheck { auth_basic off; return 200 "ok"; }\n  location /' "$F"
+done
