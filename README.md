@@ -1,6 +1,6 @@
 # Deploy and Host Chromium (Cloud Browser) on Railway
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/chromium?utm_medium=integration&utm_source=button&utm_campaign=chromium)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/chromium?referralCode=sLjDXb&utm_medium=integration&utm_source=button&utm_campaign=chromium)
 
 This template runs a full desktop [Chromium](https://www.chromium.org/) browser in the cloud, streamed to any device through the [linuxserver.io](https://docs.linuxserver.io/images/docker-chromium/) Selkies web interface. Open your Railway domain, log in, and you're inside a real browser running on the server — bookmarks, extensions, downloads, and sessions persist between visits.
 
