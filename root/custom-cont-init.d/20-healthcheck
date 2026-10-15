@@ -15,6 +15,7 @@ for F in /defaults/default.conf /etc/nginx/sites-available/default /etc/nginx/co
     print "  location = /healthcheck {"
     print "    auth_basic off;"
     print "    proxy_pass http://127.0.0.1:" port "/;"
+    print "    proxy_http_version 1.1;"
     print "    proxy_intercept_errors on;"
     print "    error_page 426 = @selkies_up;"
     print "  }"
