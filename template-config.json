@@ -11,7 +11,7 @@
         "restartPolicyMaxRetries": 10
       },
       "source": {
-        "repo": "https://github.com/nomideusz/chromium-railway",
+        "repo": "https://github.com/two-workspaces/chromium",
         "rootDirectory": null
       },
       "variables": {

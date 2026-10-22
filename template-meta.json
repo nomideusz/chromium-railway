@@ -1,0 +1,8 @@
+{
+  "id": "1aea3d23-677f-4aa5-853c-c68ef9084fd4",
+  "name": "Chromium | Your Browser in the Cloud",
+  "description": "Full desktop Chromium in your browser: private, persistent cloud browsing.",
+  "category": "Other",
+  "image": "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/chromium-logo.png",
+  "published": true
+}
