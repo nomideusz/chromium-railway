@@ -11,7 +11,7 @@
     "restartPolicyMaxRetries": 10
    },
    "source": {
-    "image": "ghcr.io/two-workspaces/chromium:faaa56c"
+    "image": "ghcr.io/two-workspaces/chromium:246dc28"
    },
    "variables": {
     "CUSTOM_USER": {
