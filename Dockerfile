@@ -1,4 +1,7 @@
-FROM linuxserver/chromium:2dba585f-ls60
+FROM linuxserver/chromium:1aca5d17-ls61
+
+# Debian's security update reaches apt before LinuxServer's weekly rebuild does, so take it here.
+RUN apt-get update && apt-get install -y --only-upgrade chromium && rm -rf /var/lib/apt/lists/*
 
 # Upstream starts Xvfb with a 15360x8640 screen, which pins ~600 MB for the
 # framebuffer alone and OOM-kills the desktop on Railway's 512 MB Trial plan.
