@@ -1,7 +1,11 @@
-FROM linuxserver/chromium:1aca5d17-ls61
+# Actions builds this file from the image branch. The Dockerfile on main is one FROM line over the
+# result, so deployers get Railway's update notice without a full build on Railway.
+FROM linuxserver/chromium:f1bb645d-ls62
 
 # Debian's security update reaches apt before LinuxServer's weekly rebuild does, so take it here.
-RUN apt-get update && apt-get install -y --only-upgrade chromium && rm -rf /var/lib/apt/lists/*
+# The exact version also stops the build cache from reusing an older apt layer.
+ARG CHROMIUM_VERSION=156.0.8078.79-1~deb13u1
+RUN apt-get update && apt-get install -y --only-upgrade "chromium=$CHROMIUM_VERSION" "chromium-common=$CHROMIUM_VERSION" && rm -rf /var/lib/apt/lists/*
 
 # Upstream starts Xvfb with a 15360x8640 screen, which pins ~600 MB for the
 # framebuffer alone and OOM-kills the desktop on Railway's 512 MB Trial plan.

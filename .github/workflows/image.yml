@@ -1,10 +1,11 @@
-# Builds the image the Railway template deploys, so a deploy pulls a finished image instead of
-# building on Railway's builders. Each push to main gets ghcr.io/<this repo>:<short sha>; point
-# template-config.json at it, then republish.
+# Builds the image the Dockerfile on main is FROM, so a deploy pulls a finished image instead of
+# doing a full build on Railway. Each push to the image branch gets ghcr.io/<this repo>:<short sha>.
+# It runs there and not on main because every push to main notifies deployers: point main's
+# Dockerfile at the new tag in the one push that ships it.
 name: Image
 on:
   push:
-    branches: [main]
+    branches: [image]
     paths-ignore: ["README.md", "template-*.json", "zeabur-template.yaml", "images/**"]
   workflow_dispatch:
 permissions:
@@ -25,6 +26,8 @@ jobs:
       - run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
       - uses: docker/build-push-action@v6
         with:
+          context: .
+          file: Dockerfile.image
           push: true
           platforms: linux/amd64
           tags: ghcr.io/${{ github.repository }}:${{ env.SHORT_SHA }},ghcr.io/${{ github.repository }}:latest
