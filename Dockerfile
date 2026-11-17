@@ -11,4 +11,8 @@ ENV MAX_RES=3840x2160
 # ponytail: one custom-init script adds an unauthenticated /healthcheck
 # location for Railway's healthcheck prober; everything else is stock.
 COPY root/ /
-RUN chmod +x /custom-cont-init.d/20-healthcheck
+RUN chmod +x /railway-gate.sh /custom-cont-init.d/20-healthcheck
+
+# Free plan (0.5 GB): serve a "needs 1 GB" page instead of starting the desktop (see railway-gate.sh).
+# There the browser opens but every real page is OOM-killed ("Error code 9") while the deploy looks healthy.
+ENTRYPOINT ["/railway-gate.sh"]
