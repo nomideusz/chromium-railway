@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+"""Drop the kernel's page cache for every regular file under the given dirs.
+
+Railway counts cached file pages as the service's memory, and with no memory
+pressure the kernel never frees them: one pip install or git clone keeps
+showing as hundreds of MB. POSIX_FADV_DONTNEED needs no privileges; pages that
+running programs have mapped stay cached.
+"""
+import os
+import sys
+
+stack = sys.argv[1:]
+while stack:
+    try:
+        with os.scandir(stack.pop()) as entries:
+            for e in entries:
+                try:
+                    if e.is_dir(follow_symlinks=False):
+                        stack.append(e.path)
+                    elif e.is_file(follow_symlinks=False):
+                        fd = os.open(e.path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+                        try:
+                            os.posix_fadvise(fd, 0, 0, os.POSIX_FADV_DONTNEED)
+                        finally:
+                            os.close(fd)
+                except OSError:
+                    pass
+    except OSError:
+        pass

@@ -1,0 +1,6 @@
+#!/bin/sh
+# Railway counts the kernel's cache of files this container has touched as the
+# service's memory, and with no memory pressure it is never freed: browser
+# caches and downloads keep showing as hundreds of MB. Drop it for the /config
+# volume every 15 minutes.
+while sleep 900; do nice -n 19 drop-file-cache /config /tmp; done

@@ -1,0 +1,26 @@
+#!/bin/sh
+# This image streams a Wayland desktop that Selkies sizes to the viewer's
+# window (times its DPI scale), up to 7680x4320; MAX_RES does nothing here.
+# Two things break a large one on Railway while the deploy still shows SUCCESS:
+# memory on small plans (a 4K window became 4800x2700 and Selkies restarted
+# every few seconds: "Waiting for stream..."), and Railway's 61 MiB /dev/shm on
+# every plan, which can't hold the compositor's screen buffers at that size
+# (labwc dies with "Bus error" and the page goes black; 2 GB didn't help).
+# So lock the desktop at 1920x1080, which the browser scales to fit, when the
+# service has under RESOLUTION_LOCK_BELOW_MIB of memory (700 unless the
+# Dockerfile says otherwise), or always when that is "always". Setting
+# SELKIES_MANUAL_WIDTH/HEIGHT yourself overrides this.
+[ -n "${SELKIES_MANUAL_WIDTH}${SELKIES_MANUAL_HEIGHT}" ] && exit 0
+below=${RESOLUTION_LOCK_BELOW_MIB:-700}
+max=$(cat /sys/fs/cgroup/memory.max 2>/dev/null)
+if [ "$below" != always ]; then
+  case "$max" in ''|max|*[!0-9]*) exit 0 ;; esac
+  [ "$max" -lt $((below * 1048576)) ] || exit 0
+fi
+printf 1920 > /run/s6/container_environment/SELKIES_MANUAL_WIDTH
+printf 1080 > /run/s6/container_environment/SELKIES_MANUAL_HEIGHT
+if [ "$below" = always ]; then
+  echo "[railway] desktop locked at 1920x1080: Railway's /dev/shm can't hold a larger Wayland screen (set SELKIES_MANUAL_WIDTH and SELKIES_MANUAL_HEIGHT to change it)"
+else
+  echo "[railway] $((max >> 20)) MiB of memory: desktop locked at 1920x1080 (give it $(( (below + 1023) / 1024 )) GB to resize to your window)"
+fi
