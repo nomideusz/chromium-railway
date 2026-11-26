@@ -1,4 +1,4 @@
-FROM linuxserver/chromium:075b0b99-ls64
+FROM linuxserver/chromium:b8f70cfa-ls65
 
 # Debian's security update reaches apt before LinuxServer's weekly rebuild does, so take it here.
 RUN apt-get update && apt-get install -y --only-upgrade chromium && rm -rf /var/lib/apt/lists/*
